@@ -7,3 +7,13 @@
 @Desc: 测试代理ip活性使用的接口
 @release: 
 """
+
+from fastapi import APIRouter, Request
+
+
+router = APIRouter()
+
+
+@router.get("/test")
+def test(request: Request):
+    return {"host": request.client.host, "port": request.client.port}
