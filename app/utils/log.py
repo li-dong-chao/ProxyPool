@@ -13,6 +13,7 @@ from app.config import setting
 from loguru import logger
 
 logger.add(os.path.join(setting.log_path, "{time:YYYY-MM-DD}.log"))
+logger.add(os.path.join(setting.log_path, "error_{time:YYYY-MM-DD}.log"), level="ERROR")
 
 
 if __name__ == '__main__':
