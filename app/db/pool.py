@@ -18,6 +18,7 @@ redis_pool = BlockingConnectionPool(
     username=setting.redis_config.username,
     password=setting.redis_config.password,
     max_connections=setting.redis_config.max_connections,
-    timeout=setting.redis_config.timeout
+    timeout=setting.redis_config.timeout,
+    decode_responses=True
 )
 

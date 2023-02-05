@@ -32,7 +32,8 @@ class Setting(object):
     key_name: str = "proxy"
 
     # 代理分数配置
-    score_init: int = 100
+    score_init: int = 10
+    score_max: int = 100
 
     def __init__(self):
         os.makedirs(self.log_path, exist_ok=True)

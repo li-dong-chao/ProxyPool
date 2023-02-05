@@ -11,6 +11,7 @@
 from app.fetcher.fetcher import Fetcher
 from app.validator.validator import Validator
 from app.db.redis_client import RedisClient
+from app.utils import logger
 
 
 class Manager(object):
@@ -19,6 +20,7 @@ class Manager(object):
         self.fetcher = Fetcher()
         self.validator = Validator()
         self.redis_cli = RedisClient()
+        self.logger = logger
 
     def fetch(self):
         """
@@ -29,8 +31,32 @@ class Manager(object):
             cur_proxy = proxies.pop()
             self.redis_cli.put(proxy=cur_proxy)
 
-    def validate(self):
+    def validate(self, proxy):
         """
         验证代理的有效性
         """
-        self.redis_cli
+        is_valid = Validator.check_proxy(proxy)
+        if is_valid:
+            self.redis_cli.reset(proxy)
+            self.logger.info(f"[{proxy}] 验证通过，当前分数: {self.redis_cli.get(proxy)}")
+        else:
+            self.redis_cli.decrease(proxy)
+            if self.redis_cli.exist_proxy(proxy):
+                self.logger.info(f"[{proxy}] 验证失败，当前分数: {self.redis_cli.get(proxy)}")
+            else:
+                self.logger.info(f"[{proxy}] 验证失败, 分数归零，已经清除")
+
+    def validate_all(self):
+        all_proxies = self.redis_cli.all_proxy()
+        self.logger.info(f"当前数据库中有{self.redis_cli.count_all_proxy()}条数据，即将开始验证代理有效性...")
+        for proxy in all_proxies:
+            self.validate(proxy)
+        self.logger.info(f"已验证{self.redis_cli.count_all_proxy()}条代理数据，"
+                         f"其中有效代理{self.redis_cli.count_valid_proxy()}条")
+
+
+if __name__ == '__main__':
+    manager = Manager()
+    manager.fetch()
+    manager.validate_all()
+    print(manager.redis_cli.all_valid_proxy())
