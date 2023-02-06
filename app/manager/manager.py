@@ -26,7 +26,9 @@ class Manager(object):
         """
         从各个免费代理网站获取代理
         """
-        proxies = self.fetcher.geonode()  # todo: 后续多个不同的免费代理网站如何进行设计？尽量设置为可插拔式
+        proxies = []
+        # proxies.extend(self.fetcher.geonode())  # todo: 后续多个不同的免费代理网站如何进行设计？尽量设置为可插拔式
+        proxies.extend(self.fetcher.jiangxianli())
         while proxies:
             cur_proxy = proxies.pop()
             self.redis_cli.put(proxy=cur_proxy)
@@ -35,14 +37,15 @@ class Manager(object):
         """
         验证代理的有效性
         """
+        print(proxy)
         is_valid = Validator.check_proxy(proxy)
         if is_valid:
             self.redis_cli.reset(proxy)
-            self.logger.info(f"[{proxy}] 验证通过，当前分数: {self.redis_cli.get(proxy)}")
+            self.logger.info(f"[{proxy}] 验证通过，当前分数: {self.redis_cli.get_score(proxy)}")
         else:
             self.redis_cli.decrease(proxy)
             if self.redis_cli.exist_proxy(proxy):
-                self.logger.info(f"[{proxy}] 验证失败，当前分数: {self.redis_cli.get(proxy)}")
+                self.logger.info(f"[{proxy}] 验证失败，当前分数: {self.redis_cli.get_score(proxy)}")
             else:
                 self.logger.info(f"[{proxy}] 验证失败, 分数归零，已经清除")
 
@@ -53,6 +56,13 @@ class Manager(object):
             self.validate(proxy)
         self.logger.info(f"已验证{self.redis_cli.count_all_proxy()}条代理数据，"
                          f"其中有效代理{self.redis_cli.count_valid_proxy()}条")
+
+    def get_proxy(self):
+        """
+        返回一个有效代理
+        :return:
+        """
+        return self.redis_cli.a_valid_proxy().string()
 
 
 if __name__ == '__main__':

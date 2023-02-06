@@ -10,8 +10,13 @@
 
 from fastapi import APIRouter
 
-from app.api.endpoints import test
+from app.manager.manager import Manager
 
 router = APIRouter()
 
-router.include_router(test.router)
+manager = Manager()
+
+
+@router.get("/get", summary="获取一个代理")
+def get():
+    return manager.get_proxy()

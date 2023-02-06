@@ -9,7 +9,7 @@
 """
 
 import requests
-from requests.exceptions import Timeout, ProxyError
+from requests.exceptions import Timeout, ProxyError, RequestException
 
 from app.utils import UACreator
 from app.schemas.proxy import Proxy
@@ -36,7 +36,7 @@ class Validator(object):
                 headers=headers,
                 timeout=10
             )
-        except (Timeout, ProxyError) as _:
+        except (Timeout, ProxyError, RequestException) as _:
             return False
         if resp.status_code == 200:
             if "<title>百度一下，你就知道</title>" in resp.text:

@@ -31,7 +31,7 @@ class RedisClient(object):
         """
         self.redis.hsetnx(self.all_proxy_key, proxy.string(), score)
 
-    def get(self, proxy: Proxy):
+    def get_score(self, proxy: Proxy):
         """
         获取指定代理的分数信息
         :param proxy: 代理
@@ -56,8 +56,9 @@ class RedisClient(object):
         :param proxy: 代理
         :return:
         """
+        self.remove_valid_proxy(proxy)
         self.redis.hincrby(self.all_proxy_key, proxy.string(), amount=-1)
-        if self.get(proxy) <= 0:
+        if self.get_score(proxy) <= 0:
             self.remove(proxy)
 
     def reset(self, proxy: Proxy, score: str = setting.score_max):
@@ -67,6 +68,7 @@ class RedisClient(object):
         :param score: 初始分数
         :return:
         """
+        self.add_valid_proxy(proxy)
         if self.redis.hexists(self.all_proxy_key, proxy.string()):
             self.redis.hset(self.all_proxy_key, proxy.string(), score)
         else:
@@ -94,12 +96,12 @@ class RedisClient(object):
         """
         return len(self.all_proxy())
 
-    def clear_valid_proxy(self):
+    def remove_valid_proxy(self, proxy: Proxy):
         """
         清空有效代理数据
         :return:
         """
-        self.redis.delete(self.valid_proxy_key)
+        self.redis.srem(self.valid_proxy_key, proxy.string())
 
     def add_valid_proxy(self, proxy: Proxy):
         """
@@ -135,8 +137,8 @@ if __name__ == '__main__':
     rc = RedisClient()
     p = Proxy(ip="127.0.0.1", port=8080, protocol="http")
     rc.put(p)
-    print(rc.get(p))
+    print(rc.get_score(p))
     rc.increase(p)
-    print(rc.get(p))
+    print(rc.get_score(p))
     rc.reset(p)
-    print(rc.get(p))
+    print(rc.get_score(p))
