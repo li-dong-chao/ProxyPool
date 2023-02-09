@@ -8,19 +8,3 @@
 @release:
 """
 
-from fastapi import FastAPI
-
-from app.api.api import router, manager
-
-
-def create_app():
-    app = FastAPI()
-
-    app.include_router(router)
-
-    # @app.on_event("startup")
-    def start():
-        manager.fetch()
-        manager.validate_all()
-
-    return app

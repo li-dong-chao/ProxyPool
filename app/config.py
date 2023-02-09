@@ -11,7 +11,7 @@ import os
 
 
 class RedisConfig(object):
-    host: str = "47.94.39.209"
+    host: str = "127.0.0.1"
     port: int = 6379
     username: str = ""
     password: str = ""
@@ -35,6 +35,14 @@ class Setting(object):
     score_init: int = 10
     score_max: int = 100
     score_min: int = 0
+
+    # 定时任务配置，单位: 小时
+    fetch_interval: int = 6
+    validate_interval: int = 3
+
+    # 多线程配置
+    fetch_thread_nums: int = 10
+    validate_thread_nums: int = 10
 
     def __init__(self):
         os.makedirs(self.log_path, exist_ok=True)

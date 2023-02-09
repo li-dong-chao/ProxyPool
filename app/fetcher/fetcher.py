@@ -52,7 +52,7 @@ class Fetcher(object):
             logger.error("Fetch error from geonode, please check.")
         return proxies
 
-    def from_jiangxianli(self):
+    def _from_jiangxianli(self):
         proxies = []
         url = "https://ip.jiangxianli.com/"
         resp = requests.get(url, headers=self.header, verify=False, timeout=20)

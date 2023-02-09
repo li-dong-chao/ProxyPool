@@ -15,6 +15,7 @@ from app.utils import logger
 from app.config import setting
 from app.db.pool import redis_pool
 from app.schemas.proxy import Proxy
+from app.exception import EmptyPoolError
 
 
 class RedisClient(object):
@@ -104,7 +105,11 @@ class RedisClient(object):
         if proxies:
             return Proxy.str2proxy(proxies[0])
         else:
-            raise ValueError("No proxy in pool.")
+            raise EmptyPoolError("No proxy in pool.")
+
+    def save(self):
+        """对redis中的数据进行持久化存储"""
+        self._redis.save()
 
 
 if __name__ == '__main__':

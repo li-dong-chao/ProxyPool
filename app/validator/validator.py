@@ -15,8 +15,6 @@ from app.utils import UACreator
 from app.schemas.proxy import Proxy
 
 
-# todo: 后续修改为多线程检查或协程检查
-
 class Validator(object):
 
     @staticmethod
