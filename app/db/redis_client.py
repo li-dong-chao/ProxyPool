@@ -19,6 +19,11 @@ from app.exception import EmptyPoolError
 
 
 class RedisClient(object):
+    """
+    redis数据库
+
+    包含了代理池用到的相关的数据库操作
+    """
 
     def __init__(self):
         self.proxy_key = setting.key_name
@@ -95,9 +100,17 @@ class RedisClient(object):
         return self._redis.zcount(self.proxy_key, min=setting.score_min, max=setting.score_max)
 
     def count_max(self) -> int:
+        """统计有效代理的数量"""
         return self._redis.zcount(self.proxy_key, min=setting.score_max, max=setting.score_max)
 
     def get(self) -> Proxy:
+        """
+        从数据库中获取一个代理
+
+        优先从有效代理中获取，如果不存在的话再去根据分数的从高到低顺序获取代理，
+        如果没有代理，报代理为空异常。
+        :return:
+        """
         valid_proxies: list = self._redis.zrangebyscore(self.proxy_key, min=setting.score_max, max=setting.score_max)
         if valid_proxies:
             return Proxy.str2proxy(choice(valid_proxies))

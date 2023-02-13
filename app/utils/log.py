@@ -4,7 +4,7 @@
 @File: log.py
 @Time: 2023/2/2-22:32
 @Author: Li Dongchao
-@Desc: 
+@Desc: 日志记录器
 """
 import os
 

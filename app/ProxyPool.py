@@ -13,7 +13,7 @@ from os.path import dirname, abspath
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from app.manager.manager import Manager
-from app.server.server import start
+from app.server.server import start_server
 
 
 def main():
@@ -38,7 +38,7 @@ def main():
     action = args.action.lower()
     module = args.module.lower()
     if action not in ["start", "stop"]:
-        raise ValueError("Parameter action should be start or stop.")
+        raise ValueError("Parameter action should be \"start\" or \"stop\".")
     if module not in ["all", "server", "fetcher", "validator"]:
         raise ValueError("Parameter module should choose from \"all\", \"server\", \"fetcher\" and \"validator\"")
     if action == "start":
@@ -46,13 +46,13 @@ def main():
         if module == "all":
             manager.add_fetch_scheduler()
             manager.add_validate_scheduler()
-            start()
+            start_server()
         elif module == "fetcher":
             manager.add_fetch_scheduler()
         elif module == "validator":
             manager.add_validate_scheduler()
         elif module == "server":
-            start()
+            start_server()
 
 
 if __name__ == '__main__':

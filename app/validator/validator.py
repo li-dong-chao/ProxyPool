@@ -4,7 +4,7 @@
 @File: validator.py
 @Time: 2023/2/3-16:39
 @Author: Li Dongchao
-@Desc: 
+@Desc: 通过测试是否能成功请求百度，来对代理的有效性进行验证
 @release: 
 """
 
@@ -19,6 +19,7 @@ class Validator(object):
 
     @staticmethod
     def check_proxy(proxy: Proxy):
+        """通过测试是否能成功请求百度，来对代理的有效性进行验证"""
         test_url = "https://baidu.com"
         headers = {
             "user-agent": UACreator().get()

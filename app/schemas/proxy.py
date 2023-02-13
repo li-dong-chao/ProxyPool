@@ -4,7 +4,7 @@
 @File: proxy.py
 @Time: 2023/2/2-16:40
 @Author: Li Dongchao
-@Desc: 定义代理类，包含对代理验证等。
+@Desc: 基于pydantic实现对Proxy类的定义，支持对数据类型的校验等
 @release: 
 """
 
@@ -22,6 +22,12 @@ class Protocol(Enum):
 
 
 class Proxy(BaseModel):
+    """
+    基于pydantic实现的一个Proxy类
+
+    支持代理数据格式检验，代理类型转字符串类型以及字符串转代理类型的操作
+
+    """
     ip: str = Field(regex=r"((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}")
     port: int = Field(ge=1, le=65535)
     protocol: Protocol
@@ -47,6 +53,7 @@ class Proxy(BaseModel):
         return f"{self.protocol}://{self.ip}:{self.port}"
 
     def string(self):
+        """代理类型转字符串类型"""
         return self.__str__()
 
     def __hash__(self):

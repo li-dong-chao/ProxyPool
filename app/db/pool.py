@@ -4,7 +4,7 @@
 @File: pool.py
 @Time: 2023/2/3-13:58
 @Author: Li Dongchao
-@Desc: 连接池
+@Desc: redis连接池构建
 @release: 
 """
 

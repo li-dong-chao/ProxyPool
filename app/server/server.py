@@ -29,13 +29,13 @@ def get():
         proxy = manager.get_proxy()
         return proxy
     except EmptyPoolError as _:
-        return "No proxy in pool."
+        return "No proxy in pool now, please check whether the fetcher is work"
 
 
-def start():
+def start_server():
     import uvicorn
-    uvicorn.run("server:app", host="127.0.0.1", port=8000)
+    uvicorn.run("app.server.server:app", host="127.0.0.1", port=8000)
 
 
 if __name__ == '__main__':
-    start()
+    start_server()

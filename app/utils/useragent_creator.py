@@ -4,7 +4,7 @@
 @File: useragent_creator.py
 @Time: 2023/2/2-21:39
 @Author: Li Dongchao
-@Desc: 参考fake-useragent项目实现一个简单的ua生成器
+@Desc: 参考fake-useragent项目 [https://github.com/fake-useragent/fake-useragent] 实现一个简单的ua生成器
 """
 
 import os
@@ -13,6 +13,11 @@ import random
 
 
 class UACreator(object):
+    """
+    user-agent生成器
+
+    所用数据来源于fake-useragent项目
+    """
 
     def __init__(self):
         self.db_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "browsers.json")

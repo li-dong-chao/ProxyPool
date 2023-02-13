@@ -80,14 +80,13 @@ class Manager(object):
     def add_fetch_scheduler(self):
         """创建抓取代理ip定时任务"""
         scheduler = BackgroundScheduler()
-        scheduler.add_job(self.fetch(), trigger='interval', hours=setting.fetch_interval)
-        scheduler.add_job(self.validate_all(), trigger='interval', hours=setting.validate_interval)
+        scheduler.add_job(self.fetch, trigger='interval', hours=setting.fetch_interval)
         scheduler.start()
 
     def add_validate_scheduler(self):
         """创建验证代理ip定时任务"""
         scheduler = BackgroundScheduler()
-        scheduler.add_job(self.validate_all(), trigger='interval', hours=setting.validate_interval)
+        scheduler.add_job(self.validate_all, trigger='interval', hours=setting.validate_interval)
         scheduler.start()
 
 
