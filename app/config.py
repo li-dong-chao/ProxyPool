@@ -27,18 +27,24 @@ class Setting(object):
     root_path: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     log_path: str = os.path.join(root_path, "log")
 
+    # 进程id保存位置
+    server_pid_path = os.path.join(log_path, "server.pid")
+    fetcher_pid_path = os.path.join(log_path, "fetcher.pid")
+    validator_pid_path = os.path.join(log_path, "validator.pid")
+
     # redis配置
     redis_config = RedisConfig()
     key_name: str = "proxy"
 
     # 代理分数配置
-    score_init: int = 10
-    score_max: int = 100
+    score_init: int = 5
+    score_max: int = 10
     score_min: int = 0
+    max_proxy_limit: int = 50000  # 最大代理数量上限
 
     # 定时任务配置，单位: 小时
-    fetch_interval: int = 6
-    validate_interval: int = 3
+    fetch_interval: int = 24
+    validate_interval: int = 6
 
     # 多线程配置
     fetch_thread_nums: int = 10
