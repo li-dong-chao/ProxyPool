@@ -17,4 +17,3 @@ from .ip3366 import Ip3366
 from .fatezero import FateZero
 from .kuaidaili import KuaiDaiLi
 from .kxdaili import KXDaiLi
-from .zdaye import ZDaYe
