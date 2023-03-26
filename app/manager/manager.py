@@ -8,9 +8,11 @@
 @release: 
 """
 import datetime
+import warnings
 from queue import Queue
 from threading import Thread
 from apscheduler.schedulers.blocking import BlockingScheduler
+from pytz_deprecation_shim import PytzUsageWarning
 
 from app.fetcher.fetcher import Fetcher
 from app.schemas.proxy import Proxy
@@ -18,7 +20,12 @@ from app.validator.validator import Validator
 from app.db.redis_client import RedisClient
 from app.utils import logger
 from app.config import setting
-from app.exception import AllValidError
+from app.exception import AllValidError, EmptyPoolError
+
+
+warnings.filterwarnings(
+    action="ignore",
+    category=PytzUsageWarning)
 
 
 class Manager(object):
@@ -36,7 +43,7 @@ class Manager(object):
         for cur_proxy in self.fetcher.get():
             # 如果超过预期代理数量上限，删除分数最低的
             # 如果全部都是有效的了，就放弃本次新代理的入库
-            if self.db.all() >= setting.max_proxy_limit:
+            if self.db.count() >= setting.max_proxy_limit:
                 try:
                     last = self.db.last()
                     self.db.remove(last)
@@ -44,6 +51,10 @@ class Manager(object):
                 except AllValidError as _:
                     self.save()
                     return
+                except EmptyPoolError as _:
+                    self.db.add(proxy=cur_proxy)
+            else:
+                self.db.add(proxy=cur_proxy)
         self.save()
 
     def validate(self, proxy: Proxy):
@@ -119,8 +130,7 @@ class Manager(object):
             self.validate_all,
             trigger='interval',
             hours=setting.validate_interval,
-            next_run_time=datetime.datetime.now()
-
+            next_run_time=datetime.datetime.now() + datetime.timedelta(hours=3)
         )
         scheduler.start()
 
@@ -128,5 +138,5 @@ class Manager(object):
 if __name__ == '__main__':
     manager = Manager()
     manager.fetch()
-    manager.validate_all()
-    print(manager.db.all())
+    # manager.validate_all()
+    # print(manager.db.all())
