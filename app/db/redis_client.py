@@ -15,7 +15,7 @@ from app.utils import logger
 from app.config import setting
 from app.db.pool import redis_pool
 from app.schemas.proxy import Proxy
-from app.exception import EmptyPoolError
+from app.exception import EmptyPoolError, AllValidError
 
 
 class RedisClient(object):
@@ -47,6 +47,7 @@ class RedisClient(object):
         return int(self._redis.zscore(self.proxy_key, proxy.string()))
 
     def exists(self, proxy: Proxy):
+        """判断一个代理是否在数据库中"""
         return not self._redis.zscore(self.proxy_key, proxy.string()) is None
 
     def remove(self, proxy: Proxy) -> None:
@@ -117,6 +118,17 @@ class RedisClient(object):
         proxies: list = self._redis.zrangebyscore(self.proxy_key, min=setting.score_min, max=setting.score_max)
         if proxies:
             return Proxy.str2proxy(proxies[0])
+        else:
+            raise EmptyPoolError("No proxy in pool.")
+
+    def last(self):
+        """返回一个分数最低的代理"""
+        proxies: list = self._redis.zrangebyscore(self.proxy_key, min=setting.score_min, max=setting.score_max)
+        if proxies:
+            last_one = proxies[-1]
+            if self.get_score(last_one) == setting.score_max:
+                raise AllValidError("All proxy in pool is valid.")
+            return Proxy.str2proxy(proxies[-1])
         else:
             raise EmptyPoolError("No proxy in pool.")
 
