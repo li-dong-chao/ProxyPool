@@ -10,10 +10,11 @@
 
 import re
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class Protocol(Enum):
+    """协议"""
     http: str = "http"
     https: str = "https"
 
@@ -31,6 +32,12 @@ class Proxy(BaseModel):
     ip: str = Field(regex=r"((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}")
     port: int = Field(ge=1, le=65535)
     protocol: Protocol
+
+    @validator("protocol", pre=True)
+    def protocol_trans(cls, v:str):  # noqa
+        return v.lower()
+
+
 
     @staticmethod
     def str2proxy(s: str):
@@ -61,6 +68,6 @@ class Proxy(BaseModel):
 
 
 if __name__ == '__main__':
-    # p1 = Proxy(ip="124.220.168.140", port=3128, protocol="http1")
-    # print(f"Proxy is {p1}")
-    print(Proxy.str2proxy("https://127.0.0.1:8000"))
+    p1 = Proxy(ip="124.220.168.140", port=3128, protocol="HTTP")
+    print(f"Proxy is {p1}")
+    # print(Proxy.str2proxy("https://127.0.0.1:8000"))
