@@ -12,8 +12,19 @@ from app.config import setting
 
 from loguru import logger
 
-logger.add(os.path.join(setting.log_path, "{time:YYYY-MM-DD}.log"))
-logger.add(os.path.join(setting.log_path, "error_{time:YYYY-MM-DD}.log"), level="ERROR")
+logger.add(
+    os.path.join(setting.log_path, "{time:YYYY-MM-DD}.log"),
+    encoding="utf-8",
+    retention="30 days",
+    enqueue=True
+)
+logger.add(
+    os.path.join(setting.log_path, "error_{time:YYYY-MM-DD}.log"),
+    level="ERROR",
+    encoding="utf-8",
+    retention="30 days",
+    enqueue=True
+)
 
 
 if __name__ == '__main__':
