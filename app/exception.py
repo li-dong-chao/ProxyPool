@@ -12,3 +12,7 @@
 class EmptyPoolError(ValueError):
     def __init__(self, *args, **kwargs):
         pass
+
+
+class AllValidError(ValueError):
+    pass
