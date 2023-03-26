@@ -1,0 +1,27 @@
+version: '3'
+services:
+  proxypool:
+    build: .
+    restart: always
+    environment:
+      TZ: 'Asia/Shanghai'
+      HOST: 'redis4proxypool'
+      PORT: '6379'
+      USERNAME: ""
+      PASSWORD: ""
+    ports:
+      - "18000:8000"
+    volumes:
+      - ./app:/ProxyPool/app
+    container_name: proxypool
+    depends_on:
+      - redis4proxypool
+
+  redis4proxypool:
+    image: redis:7.0-bullseye
+    restart: always
+    container_name: redis4proxypool
+    ports:
+      - "16379:6379"
+    volumes:
+      - ./data:/data
