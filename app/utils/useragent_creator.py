@@ -26,8 +26,7 @@ class UACreator(object):
 
     def _load(self):
         with open(self.db_file, "r", encoding="utf-8") as f:
-            for line in f.readlines():
-                self.db.update(json.loads(line))
+            self.db = json.load(f)
 
     def _get_ua(self, browser: str):
         return random.choice(self.db.get(browser))
@@ -63,4 +62,4 @@ class UACreator(object):
 
 if __name__ == '__main__':
     uac = UACreator()
-    print(uac.ie)
+    print(uac.get())
