@@ -24,8 +24,10 @@ class Fetcher(object):
         self.fetcher_list = BaseFetcher.check()
 
     def get(self):
+        logger.info("开始抓取代理")
         """返回一个抓取到的代理"""
         for fetcher_class in self.fetcher_list:
+            logger.info(f"{fetcher_class} start")
             try:
                 for p in fetcher_class().fetch():
                     if isinstance(p, Proxy):  # 只有是Proxy类型的才返回，返回不是Proxy类型，直接跳过
