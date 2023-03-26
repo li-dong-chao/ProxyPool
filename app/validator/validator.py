@@ -33,7 +33,7 @@ class Validator(object):
                 test_url,
                 proxies=proxy,
                 headers=headers,
-                timeout=10
+                timeout=5
             )
         except (Timeout, ProxyError, RequestException) as _:
             return False
