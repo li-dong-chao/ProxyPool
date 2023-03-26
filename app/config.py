@@ -8,13 +8,14 @@
 """
 
 import os
+from pydantic import BaseSettings
 
 
-class RedisConfig(object):
+class RedisConfig(BaseSettings):
     host: str = "127.0.0.1"
     port: int = 6379
     username: str = ""
-    password: str = ""
+    password: str = "123456"
     db: int = 0
     max_connections: int = 10
     timeout: int = 10
@@ -25,7 +26,7 @@ class Setting(object):
 
     # 目录配置
     root_path: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    log_path: str = os.path.join(root_path, "log")
+    log_path: str = os.path.join(root_path, "app", "log")
 
     # 进程id保存位置
     server_pid_path = os.path.join(log_path, "server.pid")
