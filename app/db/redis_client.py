@@ -125,7 +125,7 @@ class RedisClient(object):
         """返回一个分数最低的代理"""
         proxies: list = self._redis.zrangebyscore(self.proxy_key, min=setting.score_min, max=setting.score_max)
         if proxies:
-            last_one = proxies[-1]
+            last_one = Proxy.str2proxy(proxies[-1])
             if self.get_score(last_one) == setting.score_max:
                 raise AllValidError("All proxy in pool is valid.")
             return Proxy.str2proxy(proxies[-1])
