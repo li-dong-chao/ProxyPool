@@ -81,3 +81,9 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 并实现`fetch`方法，`fetch`方法即为爬虫代码，它通过`yield`返回一个代理类型（即`app/schemas/proxy.py`中的`Proxy`）。
 脚本完成后，如果需要启动该方法，在`app/fetcher/__init__.py`中引入一下该类即可。
 
+
+> 该项目是对以下两个开源项目的拙略模仿，仅作自己学习练手，
+> 有类似在学习代理池搭建的同学，建议了解下这两个项目：
+> 
+> * https://github.com/Python3WebSpider/ProxyPool
+> * https://github.com/jhao104/proxy_pool
