@@ -114,7 +114,7 @@ class Manager(object):
 
     def add_fetch_scheduler(self):
         """创建抓取代理ip定时任务"""
-        scheduler = BlockingScheduler()
+        scheduler = BlockingScheduler({'apscheduler.job_defaults.max_instances': 2})
         scheduler.add_job(
             self.fetch,
             trigger='interval',
@@ -125,7 +125,7 @@ class Manager(object):
 
     def add_validate_scheduler(self):
         """创建验证代理ip定时任务"""
-        scheduler = BlockingScheduler()
+        scheduler = BlockingScheduler({'apscheduler.job_defaults.max_instances': 2})
         scheduler.add_job(
             self.validate_all,
             trigger='interval',
